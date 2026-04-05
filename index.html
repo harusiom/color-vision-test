@@ -501,7 +501,7 @@ function gameOver() {
 function shareToX() {
   const rank = getRank(state.finalLevel);
   const pct = getPercentile(state.finalLevel);
-  const text = rank.emoji + ' 色覚力テスト結果\n\nレベル' + state.finalLevel + '到達！\n上位' + pct + '%の色覚力 — ' + rank.title + '\n\nあなたはどこまで見分けられる？👇\n' + location.href;
+  const text = rank.emoji + ' 色覚力テスト結果\n\nレベル' + state.finalLevel + '到達！\n上位' + pct + '%の色覚力 — ' + rank.title + '\n\nあなたはどこまで見分けられる？👇\n' + location.href + '\nby @yokunchu';
   window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(text), '_blank');
 }
 
