@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>👁️ 色覚力テスト</title>
+<meta property="og:title" content="👁️ 色覚力テスト - あなたは上位何%？">
+<meta property="og:description" content="微妙な色の違いを見分けろ！レベルが上がるほど難しくなる色覚チャレンジ">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="👁️ 色覚力テスト - あなたは上位何%？">
+<meta name="twitter:description" content="微妙な色の違いを見分けろ！レベルが上がるほど難しくなる色覚チャレンジ">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: linear-gradient(160deg, #0a0a1a 0%, #1a1035 40%, #0d1f3c 100%);
+  color: #e8e4f0;
+  font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 16px;
+  -webkit-tap-highlight-color: transparent;
+}
+h1 {
+  font-size: 28px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 2px;
+}
+h1.small { font-size: 18px; }
+.subtitle { color: #9a8fbf; margin-top: 8px; font-size: 14px; line-height: 1.6; text-align: center; }
+.screen { width: 100%; max-width: 400px; text-align: center; }
+.card {
+  background: rgba(255,255,255,0.05);
+  border-radius: 16px;
+  padding: 28px 24px;
+  margin-bottom: 24px;
+  border: 1px solid rgba(167,139,250,0.15);
+}
+.result-card {
+  background: linear-gradient(160deg, rgba(124,58,237,0.15), rgba(59,130,246,0.1));
+  border-radius: 20px;
+  padding: 32px 24px;
+  border: 1px solid rgba(167,139,250,0.2);
+  margin-bottom: 24px;
+}
+.btn-primary {
+  background: linear-gradient(135deg, #7c3aed, #3b82f6);
+  color: #fff; border: none; border-radius: 12px;
+  padding: 16px 48px; font-size: 18px; font-weight: 700;
+  cursor: pointer; width: 100%; max-width: 280px;
+  box-shadow: 0 4px 20px rgba(124,58,237,0.4);
+  touch-action: manipulation;
+}
+.btn-primary:active { transform: scale(0.97); }
+.btn-secondary {
+  background: transparent; color: #9a8fbf;
+  border: 1px solid rgba(167,139,250,0.3); border-radius: 12px;
+  padding: 12px 48px; font-size: 14px; cursor: pointer;
+  margin-top: 12px; width: 100%; max-width: 280px;
+  touch-action: manipulation;
+}
+.btn-x {
+  background: #000; color: #fff; border: 1px solid #333;
+  border-radius: 12px; padding: 14px; font-size: 15px;
+  font-weight: 700; cursor: pointer; width: 100%;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  touch-action: manipulation;
+}
+.btn-action {
+  flex: 1; border-radius: 12px; padding: 12px;
+  font-size: 14px; font-weight: 600; cursor: pointer;
+  border: none; touch-action: manipulation;
+}
+.status-bar {
+  display: flex; justify-content: space-between;
+  align-items: center; margin-bottom: 16px; padding: 0 4px;
+  position: relative;
+}
+.badge {
+  border-radius: 8px; padding: 6px 14px;
+  font-size: 14px; font-weight: 700;
+}
+.grid-container {
+  display: grid; padding: 8px;
+  background: rgba(0,0,0,0.3); border-radius: 16px;
+  border: 1px solid rgba(167,139,250,0.1);
+  width: 100%; max-width: min(100%, 400px);
+  aspect-ratio: 1; margin: 0 auto;
+}
+.grid-cell {
+  width: 100%; height: 100%; padding: 0;
+  border: none; cursor: pointer;
+  transition: opacity 0.3s ease, background-color 0.1s;
+  min-height: 0; min-width: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+.grid-cell.eliminated {
+  background: transparent !important;
+  border: 1px dashed rgba(255,255,255,0.06) !important;
+  opacity: 0.15; cursor: default;
+}
+.bonus-anim {
+  position: absolute; top: -18px; right: 10px;
+  font-size: 16px; font-weight: 800;
+  animation: bonusFade 0.8s ease-out forwards;
+  pointer-events: none;
+}
+@keyframes bonusFade {
+  0% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-24px); }
+}
+.nickname-input {
+  width: 100%; background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(167,139,250,0.2); border-radius: 8px;
+  padding: 12px 14px; color: #e8e4f0; font-size: 16px;
+  outline: none; -webkit-appearance: none;
+}
+.nickname-input:focus { border-color: #7c3aed; }
+.btn-save {
+  border: none; border-radius: 8px; padding: 14px 18px;
+  font-size: 16px; font-weight: 700; color: #fff;
+  width: 100%; touch-action: manipulation; cursor: pointer;
+}
+.ranking-entry {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px; border-radius: 10px; margin-bottom: 6px;
+}
+.ranking-list { max-height: 400px; overflow-y: auto; }
+.msg-success { background: rgba(52,211,153,0.1); border-radius: 10px; padding: 10px 16px; margin-bottom: 16px; color: #34d399; font-size: 13px; }
+.msg-error { color: #f87171; font-size: 12px; margin-top: 6px; }
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<!-- ===== START SCREEN ===== -->
+<div id="screen-start" class="screen">
+  <div style="margin-bottom:40px; text-align:center;">
+    <h1>👁️ 色覚力テスト</h1>
+    <p class="subtitle">1つだけ違う色のマスを見つけよう<br>レベルが上がるほど見分けが難しくなる</p>
+  </div>
+  <div class="card" style="text-align:center;">
+    <div style="font-size:48px; margin-bottom:16px;">🎨</div>
+    <p style="font-size:14px; color:#b8afd4; line-height:1.8;">
+      グリッドの中から<br>
+      <strong style="color:#a78bfa;">1つだけ違う色のマス</strong>をタップ！<br><br>
+      正解するとボーナス時間が追加⏱<br>
+      間違えるか時間切れで終了。<br>
+      <span style="font-size:12px; color:#7a7099;">難易度は数レベルごとに上がります</span>
+    </p>
+  </div>
+  <button class="btn-primary" onclick="startGame()">スタート</button>
+  <br>
+  <button class="btn-secondary" onclick="showRankingFromStart()">🏆 ランキングを見る</button>
+</div>
+
+<!-- ===== PLAYING SCREEN ===== -->
+<div id="screen-play" class="screen hidden">
+  <div style="text-align:center; margin-bottom:16px;">
+    <h1 class="small">👁️ 色覚力テスト</h1>
+  </div>
+  <div class="status-bar">
+    <div id="level-badge" class="badge" style="background:rgba(124,58,237,0.2); color:#a78bfa;">Lv.1</div>
+    <div id="bonus-anim" class="bonus-anim hidden"></div>
+    <div id="timer-badge" class="badge" style="min-width:80px; text-align:center;">⏱ 10.0秒</div>
+  </div>
+  <div id="grid" class="grid-container"></div>
+  <p style="color:#6b6190; font-size:12px; margin-top:12px;">1つだけ違う色をタップ！</p>
+</div>
+
+<!-- ===== GAMEOVER SCREEN ===== -->
+<div id="screen-gameover" class="screen hidden">
+  <div style="text-align:center; margin-bottom:16px;">
+    <h1 class="small">👁️ 色覚力テスト</h1>
+  </div>
+  <div class="result-card" style="text-align:center;">
+    <div id="result-emoji" style="font-size:56px; margin-bottom:8px;"></div>
+    <div style="font-size:13px; color:#9a8fbf; text-transform:uppercase; letter-spacing:3px; margin-bottom:8px;">あなたの色覚力</div>
+    <div id="result-level" style="font-size:42px; font-weight:900; background:linear-gradient(135deg,#a78bfa,#60a5fa); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:4px;"></div>
+    <div id="result-rank" style="font-size:20px; font-weight:700; color:#c4b5fd; margin-bottom:12px;"></div>
+    <div id="result-percentile" style="display:inline-block; background:rgba(52,211,153,0.15); border-radius:20px; padding:6px 20px; font-size:14px; color:#34d399; font-weight:600;"></div>
+  </div>
+
+  <!-- Nickname & Save -->
+  <div id="save-section" class="card" style="padding:20px;">
+    <p style="font-size:13px; color:#9a8fbf; margin-bottom:12px;">ニックネームを入力してランキングに登録</p>
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <input type="text" id="nickname-input" class="nickname-input" maxlength="12" placeholder="ニックネーム（12文字以内）">
+      <button id="save-btn" class="btn-save" onclick="saveScore()">登録</button>
+      <p id="save-error" class="msg-error hidden"></p>
+    </div>
+  </div>
+  <div id="save-success" class="msg-success hidden"></div>
+
+  <!-- Action buttons -->
+  <div style="display:flex; flex-direction:column; gap:10px;">
+    <button class="btn-x" onclick="shareToX()">
+      <span style="font-size:18px;">𝕏</span> 結果をポストする
+    </button>
+    <div style="display:flex; gap:10px;">
+      <button class="btn-action" style="background:rgba(124,58,237,0.15); color:#a78bfa; border:1px solid rgba(124,58,237,0.3);" onclick="startGame()">🔄 もう一回</button>
+      <button class="btn-action" style="background:rgba(59,130,246,0.15); color:#60a5fa; border:1px solid rgba(59,130,246,0.3);" onclick="showRankingScreen()">🏆 ランキング</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== RANKING SCREEN ===== -->
+<div id="screen-ranking" class="screen hidden">
+  <div style="text-align:center; margin-bottom:16px;">
+    <h1 class="small">👁️ 色覚力テスト</h1>
+  </div>
+  <div class="card" style="padding:24px 16px;">
+    <h2 style="font-size:20px; font-weight:800; color:#c4b5fd; margin-bottom:20px;">🏆 ランキング</h2>
+    <div id="ranking-loading" style="color:#6b6190;">読み込み中...</div>
+    <div id="ranking-empty" class="hidden" style="color:#6b6190; font-size:14px;">まだ記録がありません。<br>最初のチャレンジャーになろう！</div>
+    <div id="ranking-list" class="ranking-list hidden"></div>
+  </div>
+  <div style="display:flex; gap:10px;">
+    <button class="btn-action" style="background:linear-gradient(135deg,#7c3aed,#3b82f6); color:#fff; font-size:15px; font-weight:700; padding:14px;" onclick="startGame()">🎮 チャレンジ</button>
+    <button class="btn-action" style="background:rgba(255,255,255,0.06); color:#9a8fbf; border:1px solid rgba(167,139,250,0.2); font-size:15px; padding:14px;" onclick="showScreen('start')">戻る</button>
+  </div>
+</div>
+
+<!-- ===== FIREBASE SDK ===== -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+<script>
+// ============================================================
+// 🔧 Firebase設定 — ここにあなたのFirebase設定を貼り付けてください
+// ============================================================
+    const firebaseConfig = {
+
+        apiKey: "AIzaSyDNedS9LsPYIuoFr1SFVjNEGY5Fgmsz7m0",
+
+        authDomain: "color-vision-test-d0fba.firebaseapp.com",
+
+        databaseURL: "https://color-vision-test-d0fba-default-rtdb.firebaseio.com",
+
+        projectId: "color-vision-test-d0fba",
+
+        storageBucket: "color-vision-test-d0fba.firebasestorage.app",
+
+        messagingSenderId: "23246471895",
+
+        appId: "1:23246471895:web:1b7a0fda742a2ffc64e692"
+
+    };
+
+
+// ============================================================
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+// ===== GAME STATE =====
+let state = {
+  level: 1, gridSize: 3, oddIndex: 0,
+  baseColor: '', oddColor: '',
+  eliminatedCells: new Set(),
+  deadline: 0, timerInterval: null,
+  bonusTimeout: null, deviceId: '', finalLevel: 0,
+};
+
+// ===== DEVICE ID =====
+function getDeviceId() {
+  let id = localStorage.getItem('color-test-device-id');
+  if (!id) {
+    id = 'd_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8);
+    localStorage.setItem('color-test-device-id', id);
+  }
+  return id;
+}
+state.deviceId = getDeviceId();
+
+// Load saved nickname
+const savedNick = localStorage.getItem('color-test-nickname');
+if (savedNick) {
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('nickname-input').value = savedNick;
+  });
+}
+
+// ===== GAME LOGIC =====
+function getDifficultyStage(level) {
+  if (level <= 4) return 40;
+  if (level <= 8) return 30;
+  if (level <= 12) return 22;
+  if (level <= 16) return 16;
+  if (level <= 20) return 11;
+  if (level <= 25) return 7;
+  if (level <= 30) return 4;
+  return Math.max(2, 35 - Math.floor(level * 0.9));
+}
+
+function getGridSize(level) {
+  if (level <= 4) return 3;
+  if (level <= 8) return 4;
+  if (level <= 14) return 5;
+  return 6;
+}
+
+function getTimeBonus(level) {
+  if (level <= 4) return 1.5;
+  if (level <= 8) return 2.0;
+  if (level <= 12) return 2.5;
+  if (level <= 16) return 3.0;
+  return 3.5;
+}
+
+function getPercentile(level) {
+  if (level <= 5) return 80;
+  if (level <= 10) return 60;
+  if (level <= 15) return 40;
+  if (level <= 20) return 25;
+  if (level <= 25) return 15;
+  if (level <= 30) return 8;
+  if (level <= 35) return 3;
+  return 1;
+}
+
+function getRank(level) {
+  if (level <= 5) return { title: "ふつうの色覚", emoji: "👀" };
+  if (level <= 10) return { title: "なかなかの色覚", emoji: "🎨" };
+  if (level <= 15) return { title: "鋭い色覚", emoji: "🦅" };
+  if (level <= 20) return { title: "優れた色覚", emoji: "💎" };
+  if (level <= 25) return { title: "超人的な色覚", emoji: "🔬" };
+  if (level <= 30) return { title: "色覚マスター", emoji: "👁️‍🗨️" };
+  return { title: "神の眼", emoji: "✨" };
+}
+
+function generateColors(level) {
+  const baseHue = Math.floor(Math.random() * 360);
+  const baseSat = 50 + Math.random() * 30;
+  const baseLight = 40 + Math.random() * 20;
+  const diff = getDifficultyStage(level);
+  const dHue = (Math.random() > 0.5 ? 1 : -1) * diff;
+  const dLight = (Math.random() > 0.5 ? 1 : -1) * (diff * 0.4);
+  state.baseColor = `hsl(${baseHue}, ${baseSat}%, ${baseLight}%)`;
+  state.oddColor = `hsl(${baseHue + dHue}, ${baseSat}%, ${baseLight + dLight}%)`;
+}
+
+// ===== SCREEN MANAGEMENT =====
+function showScreen(name) {
+  ['start', 'play', 'gameover', 'ranking'].forEach(s => {
+    document.getElementById('screen-' + s).classList.toggle('hidden', s !== name);
+  });
+}
+
+// ===== GAME FLOW =====
+function setupRound(lvl, remainingTime) {
+  state.level = lvl;
+  state.gridSize = getGridSize(lvl);
+  state.eliminatedCells = new Set();
+  const total = state.gridSize * state.gridSize;
+  state.oddIndex = Math.floor(Math.random() * total);
+  generateColors(lvl);
+
+  const bankTime = remainingTime !== undefined ? remainingTime : 10;
+  state.deadline = Date.now() + bankTime * 1000;
+
+  document.getElementById('level-badge').textContent = 'Lv.' + lvl;
+  renderGrid();
+  updateTimer();
+}
+
+function renderGrid() {
+  const grid = document.getElementById('grid');
+  const gs = state.gridSize;
+  const gap = Math.max(3, 6 - gs);
+  grid.style.gridTemplateColumns = `repeat(${gs}, 1fr)`;
+  grid.style.gap = gap + 'px';
+  grid.innerHTML = '';
+
+  const br = Math.max(4, 10 - gs);
+  for (let i = 0; i < gs * gs; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'grid-cell';
+    btn.style.borderRadius = br + 'px';
+    btn.dataset.index = i;
+
+    if (state.eliminatedCells.has(i)) {
+      btn.classList.add('eliminated');
+    } else {
+      btn.style.backgroundColor = i === state.oddIndex ? state.oddColor : state.baseColor;
+    }
+
+    btn.addEventListener('click', () => handleCellClick(i));
+    grid.appendChild(btn);
+  }
+}
+
+function startGame() {
+  clearInterval(state.timerInterval);
+  document.getElementById('save-section').classList.remove('hidden');
+  document.getElementById('save-success').classList.add('hidden');
+  document.getElementById('save-error').classList.add('hidden');
+  document.getElementById('save-btn').disabled = false;
+  showScreen('play');
+  setupRound(1);
+  state.timerInterval = setInterval(updateTimer, 50);
+}
+
+function updateTimer() {
+  const remaining = Math.max(0, (state.deadline - Date.now()) / 1000);
+  const badge = document.getElementById('timer-badge');
+  badge.textContent = '⏱ ' + remaining.toFixed(1) + '秒';
+  badge.style.background = remaining <= 3 ? 'rgba(239,68,68,0.2)' : 'rgba(52,211,153,0.2)';
+  badge.style.color = remaining <= 3 ? '#f87171' : '#34d399';
+
+  if (remaining <= 0) {
+    clearInterval(state.timerInterval);
+    gameOver();
+  }
+}
+
+function showBonusAnim(text, isPositive) {
+  const el = document.getElementById('bonus-anim');
+  el.textContent = text;
+  el.style.color = isPositive ? '#34d399' : '#f87171';
+  el.classList.remove('hidden');
+  // Reset animation
+  el.style.animation = 'none';
+  el.offsetHeight; // trigger reflow
+  el.style.animation = 'bonusFade 0.8s ease-out forwards';
+  clearTimeout(state.bonusTimeout);
+  state.bonusTimeout = setTimeout(() => el.classList.add('hidden'), 800);
+}
+
+function handleCellClick(index) {
+  if (state.eliminatedCells.has(index)) return;
+
+  if (index === state.oddIndex) {
+    // Correct!
+    const remaining = Math.max(0, (state.deadline - Date.now()) / 1000);
+    const bonus = getTimeBonus(state.level);
+    const newTime = remaining + bonus;
+    showBonusAnim('+' + bonus.toFixed(1) + 's', true);
+    setupRound(state.level + 1, newTime);
+  } else {
+    // Wrong - penalty
+    const PENALTY = 3;
+    const remaining = Math.max(0, (state.deadline - Date.now()) / 1000);
+    const newTime = remaining - PENALTY;
+
+    if (newTime <= 0) {
+      clearInterval(state.timerInterval);
+      state.deadline = Date.now();
+      updateTimer();
+      gameOver();
+      return;
+    }
+
+    showBonusAnim('-' + PENALTY + '.0s', false);
+    state.deadline = Date.now() + newTime * 1000;
+
+    // Eliminate clicked cell + a few others as hints
+    const totalCells = state.gridSize * state.gridSize;
+    const wrongCells = [];
+    for (let i = 0; i < totalCells; i++) {
+      if (i !== state.oddIndex && !state.eliminatedCells.has(i) && i !== index) {
+        wrongCells.push(i);
+      }
+    }
+    const elimCount = Math.min(wrongCells.length, Math.max(2, Math.floor(totalCells * 0.15)));
+    wrongCells.sort(() => Math.random() - 0.5);
+    state.eliminatedCells.add(index);
+    for (let i = 0; i < elimCount; i++) {
+      state.eliminatedCells.add(wrongCells[i]);
+    }
+    renderGrid();
+  }
+}
+
+function gameOver() {
+  state.finalLevel = state.level - 1;
+  const rank = getRank(state.finalLevel);
+  const pct = getPercentile(state.finalLevel);
+
+  document.getElementById('result-emoji').textContent = rank.emoji;
+  document.getElementById('result-level').textContent = 'レベル ' + state.finalLevel;
+  document.getElementById('result-rank').textContent = rank.title;
+  document.getElementById('result-percentile').textContent = '上位 ' + pct + '% の色覚力';
+
+  // Reset save UI
+  document.getElementById('save-section').classList.remove('hidden');
+  document.getElementById('save-success').classList.add('hidden');
+  document.getElementById('save-error').classList.add('hidden');
+  document.getElementById('save-btn').disabled = false;
+
+  showScreen('gameover');
+}
+
+// ===== SHARE =====
+function shareToX() {
+  const rank = getRank(state.finalLevel);
+  const pct = getPercentile(state.finalLevel);
+  const text = rank.emoji + ' 色覚力テスト結果\n\nレベル' + state.finalLevel + '到達！\n上位' + pct + '%の色覚力 — ' + rank.title + '\n\nあなたはどこまで見分けられる？👇\n' + location.href;
+  window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(text), '_blank');
+}
+
+// ===== FIREBASE RANKING =====
+async function saveScore() {
+  const input = document.getElementById('nickname-input');
+  const name = input.value.trim().slice(0, 12);
+  if (!name) return;
+
+  const saveBtn = document.getElementById('save-btn');
+  const errorEl = document.getElementById('save-error');
+  errorEl.classList.add('hidden');
+  saveBtn.disabled = true;
+  saveBtn.textContent = '保存中...';
+
+  localStorage.setItem('color-test-nickname', name);
+
+  const key = state.deviceId;
+  const ref = db.ref('rankings/' + key);
+
+  try {
+    // Check existing score
+    const snapshot = await ref.once('value');
+    const prev = snapshot.val();
+
+    if (prev && prev.level > state.finalLevel) {
+      // Previous was better, just update name
+      await ref.update({ name: name });
+      showSaveSuccess('ベストはLv.' + prev.level + 'のまま（名前を更新しました）');
+    } else if (prev && prev.level === state.finalLevel) {
+      await ref.update({ name: name });
+      showSaveSuccess('記録を更新しました！');
+    } else {
+      // New best or first time
+      await ref.set({
+        name: name,
+        level: state.finalLevel,
+        percentile: getPercentile(state.finalLevel),
+        rank: getRank(state.finalLevel).title,
+        timestamp: Date.now()
+      });
+      showSaveSuccess('ランキングに登録しました！');
+    }
+  } catch (e) {
+    console.error('Save failed:', e);
+    errorEl.textContent = '⚠️ 保存に失敗しました。もう一度お試しください。';
+    errorEl.classList.remove('hidden');
+    saveBtn.disabled = false;
+    saveBtn.textContent = '登録';
+  }
+}
+
+function showSaveSuccess(msg) {
+  document.getElementById('save-section').classList.add('hidden');
+  const el = document.getElementById('save-success');
+  el.textContent = '✅ ' + msg;
+  el.classList.remove('hidden');
+}
+
+async function loadRankings() {
+  const loadingEl = document.getElementById('ranking-loading');
+  const emptyEl = document.getElementById('ranking-empty');
+  const listEl = document.getElementById('ranking-list');
+
+  loadingEl.classList.remove('hidden');
+  emptyEl.classList.add('hidden');
+  listEl.classList.add('hidden');
+  listEl.innerHTML = '';
+
+  try {
+    const snapshot = await db.ref('rankings').orderByChild('level').limitToLast(50).once('value');
+    const entries = [];
+    snapshot.forEach(child => {
+      entries.push(child.val());
+    });
+    entries.sort((a, b) => b.level - a.level || a.timestamp - b.timestamp);
+
+    loadingEl.classList.add('hidden');
+
+    if (entries.length === 0) {
+      emptyEl.classList.remove('hidden');
+      return;
+    }
+
+    listEl.classList.remove('hidden');
+    entries.slice(0, 20).forEach((entry, i) => {
+      const div = document.createElement('div');
+      div.className = 'ranking-entry';
+      div.style.background = i === 0 ? 'rgba(250,204,21,0.1)' : i === 1 ? 'rgba(192,192,192,0.08)' : i === 2 ? 'rgba(205,127,50,0.08)' : 'rgba(255,255,255,0.02)';
+      div.style.border = i < 3 ? '1px solid rgba(250,204,21,0.15)' : '1px solid rgba(255,255,255,0.04)';
+
+      const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1);
+      const medalColor = i === 0 ? '#facc15' : i === 1 ? '#c0c0c0' : i === 2 ? '#cd7f32' : '#6b6190';
+      const medalSize = i < 3 ? '22px' : '14px';
+
+      div.innerHTML = `
+        <div style="display:flex; align-items:center; gap:12px;">
+          <span style="font-size:${medalSize}; width:32px; text-align:center; font-weight:700; color:${medalColor};">${medal}</span>
+          <div style="text-align:left;">
+            <div style="font-size:14px; font-weight:600; color:#e8e4f0;">${escapeHtml(entry.name)}</div>
+            <div style="font-size:11px; color:#6b6190;">${escapeHtml(entry.rank || '')}</div>
+          </div>
+        </div>
+        <div style="font-size:18px; font-weight:800; color:#a78bfa;">Lv.${entry.level}</div>
+      `;
+      listEl.appendChild(div);
+    });
+  } catch (e) {
+    console.error('Failed to load rankings:', e);
+    loadingEl.textContent = 'ランキングの読み込みに失敗しました';
+  }
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+async function showRankingScreen() {
+  showScreen('ranking');
+  await loadRankings();
+}
+
+async function showRankingFromStart() {
+  showScreen('ranking');
+  await loadRankings();
+}
+
+// Update save button style based on input
+document.addEventListener('DOMContentLoaded', () => {
+  const input = document.getElementById('nickname-input');
+  const btn = document.getElementById('save-btn');
+  function updateBtn() {
+    const hasName = input.value.trim().length > 0;
+    btn.style.background = hasName ? 'linear-gradient(135deg, #7c3aed, #3b82f6)' : '#333';
+    btn.style.opacity = hasName ? '1' : '0.4';
+  }
+  input.addEventListener('input', updateBtn);
+  updateBtn();
+});
+</script>
+</body>
+</html>
